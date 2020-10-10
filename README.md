@@ -39,4 +39,4 @@ kubectl -n istio-thrift apply -f deploy.yaml
 kubectl -n istio-thrift apply -f gateway.yaml
 ```
 
-7. Follow [these instructions](https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/#determining-the-ingress-ip-and-ports) to set the INGRESS_HOST and INGRESS_PORT variables for accessing the gateway. Return here, when they are set.
+7. Follow [these instructions](https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/#determining-the-ingress-ip-and-ports) to set the INGRESS_HOST and INGRESS_PORT variables for accessing the gateway.
