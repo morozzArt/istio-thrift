@@ -6,9 +6,15 @@
 kind create cluster
 ```
 
-2. Run and setup istio
+2. Install, run and setup istio
 
 ```
+sudo curl -sL https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
+sudo chmod +x ./istio-1.6.8
+sudo mv ./istio-1.6.8 /usr/local/bin/istio-1.6.8
+export ISTIOPATH=/usr/local/bin/istio-1.6.8
+export PATH=$ISTIOPATH/bin:$PATH
+
 istioctl install --set profile=demo
 ```
 
