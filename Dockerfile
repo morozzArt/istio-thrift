@@ -42,6 +42,8 @@ WORKDIR /
 
 COPY kind_configs kind_configs
 COPY cluster_configs cluster_configs
+COPY Clients Clients
+COPY Services Services
 
 # Install the magic wrapper.
 ADD ./wrapdocker /usr/local/bin/wrapdocker
