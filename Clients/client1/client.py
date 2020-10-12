@@ -18,23 +18,23 @@ app = Flask(__name__)
 countryHostname = "country" if (os.environ.get("COUNTRY_HOSTNAME") is None) else os.environ.get("COUNTRY_HOSTNAME")
 currencyHostname = "currency" if (os.environ.get("CURRENCY_HOSTNAME") is None) else os.environ.get("CURRENCY_HOSTNAME")
 
-def country_service():
-    try:
-        transport = TSocket.TSocket(countryHostname, 9080)
-        transport = TTransport.TBufferedTransport(transport)
-        protocol = TBinaryProtocol.TBinaryProtocol(transport)
-        client = CountryManager.Client(protocol)
-        transport.open()
+# def country_service():
+#     try:
+#         transport = TSocket.TSocket(countryHostname, 9080)
+#         transport = TTransport.TBufferedTransport(transport)
+#         protocol = TBinaryProtocol.TBinaryProtocol(transport)
+#         client = CountryManager.Client(protocol)
+#         transport.open()
 
-        country = client.get_country('USA')
-        info = "{}:\n\tCapital is {}\n\tCurrency is {}".format(country.name,
-                                                                country.capital,
-                                                                country.currency)
-    except Thrift.TException as tx:
-        info = tx.message
-    finally:
-        transport.close()
-        return info
+#         country = client.get_country('USA')
+#         info = "{}:\n\tCapital is {}\n\tCurrency is {}".format(country.name,
+#                                                                 country.capital,
+#                                                                 country.currency)
+#     except Thrift.TException as tx:
+#         info = tx.message
+#     finally:
+#         transport.close()
+#         return info
 
 def currency_service():
     try:
@@ -53,9 +53,9 @@ def currency_service():
         return val
 
 def do_thrift_connection():
-    retval_country = country_service()
+    # retval_country = country_service()
     retval_cuurency = currency_service()
-    retval = "{}\n{}".format(retval_country, retval_cuurency)
+    retval = "{}\n{}".format(retval_cuurency)
     return retval
 
 

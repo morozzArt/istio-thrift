@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: currency
+  name: currency
+spec:
+  ports:
+  - port: 9080
+    protocol: TCP
+    name: tcp
+  selector:
+    app: currency
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: currency
+  name: currency
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: currency
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: currency
+    spec:
+      containers:
+      - image: currency/currency:some_tag
+        imagePullPolicy: IfNotPresent
+        name: demo
+        resources: {}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: istio-thrift
+spec:
+  workloadSelector:
+    labels:
+      app: currency
+  configPatches:
+  - applyTo: NETWORK_FILTER
+    match:
+      context: SIDECAR_OUTBOUND
+      listener:
+        portNumber: 9080
+        filterChain:
+          filter:
+            name: envoy.tcp_proxy
+    patch:
+      operation: REMOVE
+  - applyTo: NETWORK_FILTER
+    match:
+      context: SIDECAR_OUTBOUND
+      listener:
+        portNumber: 9080
+    patch:
+      operation: INSERT_FIRST
+      value:
+        name: envoy.filters.network.thrift_proxy
+        config:
+          stat_prefix: "outbound|9080||currency.istio-thrift.svc.cluster.local"
+          transport: AUTO_TRANSPORT
+          protocol: AUTO_PROTOCOL
+          thrift_filters:
+          - name: envoy.filters.thrift.router
+          route_config:
+            routes:
+            - match:
+                method_name: ""
+              route:
+                cluster: "outbound|9080||currency.istio-thrift.svc.cluster.local"
