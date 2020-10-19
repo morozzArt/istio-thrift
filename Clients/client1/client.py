@@ -55,7 +55,7 @@ def currency_service():
 def do_thrift_connection():
     # retval_country = country_service()
     retval_cuurency = currency_service()
-    retval = "{}\n{}".format(retval_cuurency)
+    retval = "{}".format(retval_cuurency)
     return retval
 
 

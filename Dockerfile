@@ -25,10 +25,10 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s 
 RUN chmod +x ./kubectl
 RUN mv ./kubectl /usr/local/bin/kubectl
 
-RUN curl -sL https://istio.io/downloadIstio | ISTIO_VERSION=1.6.8 sh -
-RUN chmod +x ./istio-1.6.8
-RUN mv ./istio-1.6.8 /usr/local/bin/istio-1.6.8
-ENV ISTIOPATH=/usr/local/bin/istio-1.6.8
+RUN curl -sL https://istio.io/downloadIstio | ISTIO_VERSION=1.7.2 sh -
+RUN chmod +x ./istio-1.7.2
+RUN mv ./istio-1.7.2 /usr/local/bin/istio-1.7.2
+ENV ISTIOPATH=/usr/local/bin/istio-1.7.2
 ENV PATH=$ISTIOPATH/bin:$PATH
 
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
@@ -42,6 +42,8 @@ WORKDIR /
 
 COPY kind_configs kind_configs
 COPY cluster_configs cluster_configs
+COPY Clients Clients
+COPY Services Services
 
 # Install the magic wrapper.
 ADD ./wrapdocker /usr/local/bin/wrapdocker
