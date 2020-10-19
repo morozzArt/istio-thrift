@@ -1,4 +1,7 @@
 #!/bin/bash
+
+docker run -it --net=PRIVATENET --privileged -p 8008:8008 -p 9080:9080 --name kind_Node1 -d main/main:some_tag
+kind create cluster --config=/kind_configs/kind_config1.yaml --name kind-1
 export MAIN_CLUSTER_CTX=kind-kind-1
 export MAIN_CLUSTER_NAME=kind-1
 export REMOTE_CLUSTER_NAME=kind-2
@@ -14,9 +17,10 @@ kubectl create secret generic cacerts -n istio-system \
     --from-file=samples/certs/root-cert.pem \
     --from-file=samples/certs/cert-chain.pem
 
+
 istioctl --context=${MAIN_CLUSTER_CTX} install --set profile=demo
 
-istioctl --context=${MAIN_CLUSTER_CTX} install -f istio-cluster1.yaml
+    istioctl --context=${MAIN_CLUSTER_CTX} install -f istio-cluster1.yaml
 
 # Wait
 
@@ -36,4 +40,6 @@ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
 export TCP_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="tcp")].nodePort}')
 export INGRESS_HOST=$(kubectl get po -l istio=ingressgateway -n istio-system -o jsonpath='{.items[0].status.hostIP}')
+
+export ISTIOD_REMOTE_EP=$(kubectl get po -l istio=ingressgateway -n istio-system -o jsonpath='{.items[0].status.hostIP}')
 export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
